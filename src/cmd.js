@@ -1,3 +1,10 @@
+/*
+ * cmd.js v0.0.1
+ * Base library for lib
+ * Author, gavinning
+ * Home, www.ilinco.com
+ */
+
 var fs = require('fs');
 var exec = require('child_process').exec;
 var lib = require('./lib');
@@ -68,9 +75,9 @@ Cmd.prototype = {
 
 module.exports = Cmd;
 
-var cmd = new Cmd;
+// var cmd = new Cmd;
 
-cmd.copy('f:\\a', 'f:\\b', function(){
-	console.log(arguments)
-})
+// cmd.copy('f:\\a', 'f:\\b', function(){
+// 	console.log(arguments)
+// })
 
