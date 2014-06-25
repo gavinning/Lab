@@ -12,6 +12,14 @@ var lib = require('./linco');
 
 lib.include({
 
+	isFile: function(src){
+		try{
+			return fs.statSync(src).isFile();
+		}catch(e){
+			return false;
+		}
+	},
+
 	isDir: function(src){
 		try{
 			return fs.statSync(src).isDirectory();
