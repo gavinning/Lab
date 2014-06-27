@@ -78,7 +78,7 @@ lib.include({
 				isFilter = lib.inArray(item, filter) >= 0;
 				only ? isOnly = item.match(only) : isOnly = true;
 
-				console.log(only, item, isOnly)
+				// console.log(only, item, isOnly)
 
 				if(fs.statSync(tmpDir).isDirectory()){
 					if(!isFilter){

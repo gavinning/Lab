@@ -1,6 +1,6 @@
 {
   "name": "linco.lab",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "for linco",
   "main": "index.js",
   "scripts": {
