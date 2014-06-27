@@ -1,8 +1,15 @@
 var lib = require('./lib');
 
-console.log(lib.isFile('./lib.js'))
-console.log(lib.isFile('./'))
-console.log(lib.isDir('./lib.js'))
-console.log(lib.isDir('./'))
+var date = new Date().getTime();
+
+var files = lib.dir('/Users/iLinco/Downloads', [], /\.zip/)
+
+var now = new Date().getTime();
+
+// console.log(now - date)
+console.log(files.file.length)
+// console.log(files.folder.length)
+
+
 
 
