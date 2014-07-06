@@ -17,11 +17,14 @@ function App(){
 		else if(path.join(argv, req.url)){
 			fs.readFile(path.join(argv, req.url), function(e, data){
 				if(e){
-					console.log(e.message)
+					console.log(e.message);
 					res.writeHead(404);
 					return res.end('404');
 				}else{
-					res.writeHead(200);
+					// 处理html文件
+					path.extname(req.url) == '.html' ?
+						res.writeHead(200, {'Content-Type': 'text/html'}):
+						res.writeHead(200);
 					res.end(data);
 				}
 			})
