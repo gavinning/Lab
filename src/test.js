@@ -1,20 +1,15 @@
-// var lib = require('./lib');
-
-// var date = new Date().getTime();
-
-// var files = lib.dir('/Users/iLinco/Downloads', [], /\.zip/)
-
-// var now = new Date().getTime();
-
-// // console.log(now - date)
-// console.log(files.file.length)
-// // console.log(files.folder.length)
+var Image = require('./images');
+var img, opt;
 
 
-var http = require('http');
-var fs = require('fs');
-var Canvas = require('canvas');
-var Image = Canvas.Image;
+opt = {
+	mark: '2.png',
+	min : 0.9,
+	log : true,
+	maxWidth: 950
+}
 
+img = new Image(opt);
 
-console.log(Canvas)
+// console.log(img)
+img('/Users/gavinning/Pictures/2.png', '/Users/gavinning/Pictures/out.png').width(400).run();
