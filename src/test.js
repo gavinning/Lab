@@ -5,7 +5,7 @@ var img, opt;
 opt = {
 	mark: '2.png',
 	min : 0.9,
-	log : true,
+	log : false,
 	maxWidth: 950
 }
 

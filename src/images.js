@@ -23,15 +23,34 @@ var image = function(opt){
 	}
 
 	// 图片处理参数
+	// 下面列出的参数将会被得到验证和处理
+	// 处理顺序根据下列参数排序
 	child.opt = {
+		// 过滤
+		// 高级过滤模式
+		// 过滤图片数量，指定分辨率的图片
+		// 可移动到指定的目录
+		// 由child.proFilter()处理
+		isFilter: false,
+
+		// 图片宽度是否处理
+		width: null,
+		// 图片是否限制最大宽度
+		maxWidth: null,
+		// 是否有水印
 		mark: null,
+		// 图片质量，仅jpeg有效 0-1
 		min: 1,
+
+		// 是否打日志
 		log: false
 	}
+
 
 	// 数据存储
 	child.db = {};
 
+	// ！参数设置类方法
 	// 图片压缩比，for jpeg
 	child.min = function(num){
 		this.opt.min = num;
@@ -55,6 +74,8 @@ var image = function(opt){
 		return this;
 	}
 
+	// ！功能实现类方法
+	// 获取水印图片信息并缓存
 	child.getMark = function(){
 		var img;
 
@@ -68,69 +89,115 @@ var image = function(opt){
 		return null;
 	};
 
+	// 记录日志
 	child.log = function(msg){
+		if(!this.opt.log) return;
 		msg.time ? "" : msg.time = new Date().getTime();
 		child.db.log.insert(msg, function(e){
 			if(e) console.log('insert log error: ' + e.message)
 		})
 	}
 
-	// 执行压缩
-	child.run = function(callback){
-		var obj = this;
-
+	// 读图回调，简化run方法
+	child.read = function(callback){
 		fs.readFile(this.src, function(e, buffer){
 			if(e) throw e;
+			callback(child, buffer)
+		})
+	}
 
-			var gap, canvas, ctx, out, stream, img;
+	// 创建需要处理的img对象
+	child.createImg = function(buffer){
+		var img = new Image;
+		img.src = buffer;
+		return img;
+	}
 
-			img = new Image;
-			img.src = buffer;
+	// 创建canvas对象
+	child.canvas = function(img){
+		var gap, canvas;
 
-			// 计算压缩比
-			gap = obj.opt.width/img.width;
-			// 计算宽度
-			obj.opt.height = img.height * gap;
+		// 计算压缩比
+		gap = this.opt.width/img.width;
+		// 计算宽度
+		this.opt.height = img.height * gap;
 
-			// 设置画布
-			canvas = new Canvas(obj.opt.width, obj.opt.height);
-			ctx = canvas.getContext('2d');
+		// 设置画布
+		canvas = new Canvas(this.opt.width, this.opt.height);
+		
+		return canvas;
+	}
 
-			// 设置输出路径
-			out = fs.createWriteStream(obj.output);
-			stream = canvas.pngStream();
+	// 处理图片，所有处理条件在此方法里进行
+	child.handleImg = function(canvas, img){
+		var ctx = canvas.getContext('2d');
 
-			// 插入图片
-			ctx.drawImage(img, 0, 0, obj.opt.width, obj.opt.height);
-			// 插入水印
-			obj._mark ?
-				ctx.drawImage(obj._mark, canvas.width - obj._mark.width, canvas.height - obj._mark.height, obj._mark.width, obj._mark.height):"";
+		// 插入图片
+		ctx.drawImage(img, 0, 0, this.opt.width, this.opt.height);
+		// 插入水印
+		this._mark ?
+			ctx.drawImage(this._mark, canvas.width - this._mark.width, canvas.height - this._mark.height, this._mark.width, this._mark.height):"";
 
+	}
+
+	// 输出图片
+	child.outputImg = function(canvas, callback){
+		var out, stream;
+
+		// 设置输出路径
+		out = fs.createWriteStream(child.output);
+		stream = canvas.pngStream();
+
+		// 输出图片
+		stream.on('data', function(chunk){
+			out.write(chunk);
+		});
+
+		// 输出完成
+		stream.on('end', function(){
+			var log = {
+				filename: path.basename(child.src),
+				source: child.src,
+				target: child.output,
+				time: new Date().getTime()
+			};
+
+			callback ?
+				callback():
+				console.log('filename: '+log.filename, ', target: ' + log.target);
+
+			child.log(log);
+		});
+	}
+
+	// 高级过滤
+	child.proFilter = function(){
+		
+	}
+
+	// 执行压缩
+	child.run = function(callback){
+
+		this.read(function(obj, buffer){
+
+			var canvas, ctx, out, stream, img;
+
+			// 生成图片对象
+			img = obj.createImg(buffer);
+
+			// 生成canvas对象
+			canvas = obj.canvas(img);
+
+			// 处理图片
+			obj.handleImg(canvas, img);
 
 			// 输出图片
-			stream.on('data', function(chunk){
-				out.write(chunk);
-			});
-
-			// 输出完成
-			stream.on('end', function(){
-				var log = {
-					filename: path.basename(obj.src),
-					source: obj.src,
-					target: obj.output,
-					time: new Date().getTime()
-				};
-
-				callback ?
-					callback():
-					console.log('filename: '+log.filename, ', target: ' + log.target);
-
-				child.log(log);
-			});
+			obj.outputImg(canvas, callback);
 
 		})
 	}
 
+	// 初始化，合并参数，缓存水印等
 	child.init = function(){
 		console.log('linco.lab image is init');
 
