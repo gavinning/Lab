@@ -1,3 +1,6 @@
+// by gavinning
+// 文件及目录变更监听 
+
 var fs = require('fs');
 var path = require('path');
 var lib = require('./lib');
@@ -16,6 +19,8 @@ var live = {
 		isFolder: true,
 		// 过滤监听的文件
 		filter: [],
+		// 过滤监听的目录
+		filterFolder: [],
 		// 监听指定的文件
 		only: [],
 		// 回调
@@ -33,12 +38,12 @@ var live = {
 			return console.log('error: don\'t has callback')
 		}
 		// 合并opt
-		lib.extend(this.opt, opt);
+		lib.extend(live.opt, opt);
 		// 合并callback到opt
-		this.opt.callback = callback;
+		live.opt.callback = callback;
 
 		return Array.isArray(src) ?
-			this.array(src) : this.array([src]);
+			live.array(src) : live.array([src]);
 	},
 
 	array: function(arr){
@@ -69,17 +74,40 @@ var live = {
 			_folder = _folder.concat(_this.dir(item, _this.opt.filter));
 		});
 
-		console.log(_folder)
+		// console.log(_folder)
 
 		// 设置监听
-		// _folder.forEach(function(item){
-		// 	_this.watchFolder(item, _this.opt.callback)
-		// });
+		_folder.forEach(function(item){
+			_this.watchFolder(item, _this.opt.callback)
+		});
 	},
 
 	watchFolder: function(src, callback){
+		var basename =  path.basename(src);
+
+		// 过滤不需要监听的目录-1
+		if(lib.inArray(basename, live.opt.filterFolder) >= 0) return;
+
 		fs.watch(src, function(event, filename){
-			callback(event, filename);
+			var stat;
+
+			// 过滤不需要监听的文件
+			if(lib.inArray(filename, live.opt.filter) >= 0) return;
+
+			// 过滤不需要监听的目录-2
+			// 父级目录的关系，目录过滤需要过滤两遍
+			if(lib.inArray(filename, live.opt.filterFolder) >= 0 && lib.isDir(path.join(src, filename))) return;
+
+
+			try{
+				stat = fs.statSync(path.join(src, filename));
+				callback(path.join(src, filename), stat);
+
+			// 忽略文件删除
+			}catch(e){
+				return console.log(e);
+			}
+			
 		})
 	},
 
@@ -101,6 +129,4 @@ var live = {
 
 }
 
-live.enter('/Users/gavinning/Downloads/tmp', function(){
-	console.log(arguments)
-})
+module.exports = live.enter;

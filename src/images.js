@@ -8,7 +8,7 @@
 
 var fs = require('fs');
 var path = require('path');
-var exec = require('child_process');
+var exec = require('child_process').exec;
 var lib = require('./lib');
 var Canvas = require('canvas');
 var Image = Canvas.Image;
@@ -32,6 +32,10 @@ var image = function(opt){
 		// 可移动到指定的目录
 		// 由child.proFilter()处理
 		isFilter: false,
+		// 高清宽度
+		HDWidth: 1400,
+		// 高清数量
+		HDLength: 8,
 
 		// 图片宽度是否处理
 		width: null,
@@ -79,8 +83,10 @@ var image = function(opt){
 	child.getMark = function(){
 		var img;
 
+// 水印检测出问题
+console.log(fs.existsSync(child.opt.mark))
 		// 是否插入水印
-		if(child.opt.mark && (fs.exists(child.opt.mark) || fs.existsSync(path.join(__dirname, child.opt.mark)))){
+		if(child.opt.mark && (fs.existsSync(child.opt.mark) || fs.existsSync(path.join(__dirname, child.opt.mark)))){
 			img = new Image;
 			img.src = fs.readFileSync(child.opt.mark);
 			return img;
@@ -146,7 +152,22 @@ var image = function(opt){
 
 		// 设置输出路径
 		out = fs.createWriteStream(child.output);
-		stream = canvas.pngStream();
+		
+		// 检测是否为符合要求的图片
+		if(!this.src.match(/png$|jpg$/)) return console.log(this.src + ' is not pic');
+
+		// 设置png输出
+		if(path.extname(this.src) == '.png')
+			stream = canvas.pngStream();
+
+		// 设置jpg输出
+		if(path.extname(this.src) == '.jpg')
+			stream = canvas.jpegStream({
+			    bufsize: 4096 // output buffer size in bytes, default: 4096
+			  , quality: this.opt.min * 100 // JPEG quality (0-100) default: 75
+			  , progressive: false // true for progressive compression, default: false
+			});
+
 
 		// 输出图片
 		stream.on('data', function(chunk){
@@ -172,7 +193,7 @@ var image = function(opt){
 
 	// 高级过滤
 	child.proFilter = function(){
-		
+
 	}
 
 	// 执行压缩
