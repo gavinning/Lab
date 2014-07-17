@@ -16,16 +16,18 @@ lib.include({
 		try{
 			return fs.statSync(src).isFile();
 		}catch(e){
-			return false;
+			console.log(e.message, 'from lib.js line.19')
 		}
+		return false;
 	},
 
 	isDir: function(src){
 		try{
 			return fs.statSync(src).isDirectory();
 		}catch(e){
-			return false;
+			console.log(e.message, 'from lib.js line.28')
 		}
+		return false;
 	},
 
 	isDirectory: function(src){
