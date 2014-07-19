@@ -16,7 +16,7 @@ lib.include({
 		try{
 			return fs.statSync(src).isFile();
 		}catch(e){
-			console.log(e.message, 'from lib.js line.19')
+			// console.log('waring: ' + e.message, 'from lib.js line.19');
 		}
 		return false;
 	},
@@ -25,7 +25,7 @@ lib.include({
 		try{
 			return fs.statSync(src).isDirectory();
 		}catch(e){
-			console.log(e.message, 'from lib.js line.28')
+			// console.log('waring: ' + e.message, 'from lib.js line.28');
 		}
 		return false;
 	},
