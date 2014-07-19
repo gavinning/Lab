@@ -67,11 +67,11 @@ var live = {
 		this.opt.isTree ?
 		// 遍历子目录
 		folder.forEach(function(item){
-			_folder = _folder.concat(lib.dir(item, _this.opt.filter, _this.opt.only).folder);
+			_folder = _folder.concat(lib.dir(item).folder);
 		}):
 		// 只监听直属子目录
 		folder.forEach(function(item){
-			_folder = _folder.concat(_this.dir(item, _this.opt.filter));
+			_folder = _folder.concat(_this.dir(item));
 		});
 
 		// console.log(_folder)
@@ -84,6 +84,8 @@ var live = {
 
 	watchFolder: function(src, callback){
 		var basename =  path.basename(src);
+
+		if(!src || !basename) return;
 
 		// 过滤不需要监听的目录-1
 		if(lib.inArray(basename, live.opt.filterFolder) >= 0) return;
