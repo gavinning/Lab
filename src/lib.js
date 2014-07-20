@@ -35,11 +35,13 @@ lib.include({
 	},
 
 	mkdir: function(src, child){
+		var parent;
+
 		if(!this.isDir(src)){
 			try{
 				fs.mkdirSync(src);
 			}catch(e){
-				var parent = path.join(src, '../');
+				parent = path.join(src, '../');
 				this.mkdir(parent, src);
 			}
 			finally{
@@ -63,6 +65,7 @@ lib.include({
 	},
 
 	// 遍历文件夹
+	// 稳定版本
 	dir: function(url, opt){
 		var lib = this;
 		var result = {};
@@ -197,6 +200,51 @@ lib.include({
 		deepDir(url);
 
 		return result;
+	},
+
+	// 复制
+	copy: function(source, target, callback){
+		var obj;
+		var lib = this;
+		var async = require('async');
+		var arr = [];
+		var cb = callback || function(){};
+
+		if(!source) return;
+
+		obj = this.dir(source);
+
+		// 遍历需要创建的源，并创建对应的目标路劲
+		obj.folders.forEach(function(item){
+			// 获取真是目标路径
+			var _target = path.join(target, path.relative(source, item))
+			if(!lib.isDir(_target)){
+				lib.mkdir(_target)
+			}
+		})
+
+		// 开始复制文件
+		// 防止文件进程溢出，需要依赖async串行处理
+		async.eachSeries(obj.files, function(item, callback){
+			// 真实文件路径
+			var _target = path.join(target, path.relative(source, item));
+			// 开始复制操作
+			lib.stream(item, _target, callback);
+			// 真实回调
+			cb(null, item, _target)
+		},function(){})
+	},
+
+	stream: function(source, target, callback){
+		var input = fs.createReadStream(source);
+		var output = fs.createWriteStream(target);
+
+		input.pipe(output);
+
+		input.on('end', function(){
+			output.end();
+			callback(null, source, target);
+		});
 	},
 
 	upload: function(url, file, callback){

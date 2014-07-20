@@ -1,83 +1,40 @@
-/*
- * cmd.js v0.0.1
- * Base library for lib
- * Author, gavinning
- * Home, www.ilinco.com
- */
+// for !window
 
 var fs = require('fs');
+var path = require('path');
 var exec = require('child_process').exec;
-var lib = require('./lib');
-var OS = require('os').type();
-var isWin = OS == 'Windows_NT';
 
-var CMDHash = {};
+var cmd  = {
+	makeCmd: function(cmd, source, target){
+		return cmd + ' "' + source + '" "' + target + '"';
+	},
 
-if(isWin){
-	CMDHash.cp = 'copy';
-	CMDHash.xcp = 'xcopy';
-	CMDHash.mv = 'move';
-	CMDHash.ls = 'dir';
-}else{
-	CMDHash.cp = 'cp';
-	CMDHash.mv = 'mv';
-	CMDHash.ls = 'ls';
-};
+	makeMethod: function(cmd, source, target, cb){
+		exec(this.makeCmd(cmd, source, target), function(e, msg){
+			if(e){
+				console.log(source)
+				console.log(target)
+				console.log(e.message);
+				return;
+			}
 
-function Cmd(){}
-
-Cmd.prototype = {
-	exec: function(cmd, callback){
-		exec(cmd, function(e, msg){
-			callback ? callback(e, msg) : "";
+			if(cb){
+				cb(e, 'done: ' + target);
+			}else{
+				console.log('done: ' + target)
+			}
 		})
 	},
 
-	command: function(){
-		var cmd = arguments[0];
-		var arr = [].slice.call(arguments, 1);//arguments.slice(1);
-		var source = '"' +　arr.join('" "') + '"';
-		return cmd + ' ' + source;
+	copy: function(source, target, cb){
+		return this.makeMethod('cp -r', source, target, cb);
 	},
 
-	move: function(source, target, callback){
-		this.exec(this.command(CMDHash.mv, source, target), callback)
-	},
-
-	copy: function(source, target, callback){
-		var cp = this.command(CMDHash.cp, source, target);
-		var xcp = this.command(CMDHash.xcp + ' /i /e', source, target);
-
-		isWin?
-			lib.isDir(source)?
-				this.exec(xcp, callback):
-				this._copy(source, target, callback):
-			this.exec(cp, callback);
-	},
-
-	_copy: function(source, target, callback){
-		console.log(source, target)
-		var rs = fs.createReadStream(source);
-		var ws = fs.createWriteStream(target);
-
-		rs.on('data', function(chunk){
-			ws.write(chunk)
-		})
-		rs.on('end', function(){
-			callback(null, 'success')
-		})
-	},
-
-	test: function(callback){
-		this.exec('ls', callback);
+	move: function(source, target, cb){
+		return this.makeMethod('mv', source, target, cb);
 	}
+
+
 }
 
-module.exports = Cmd;
-
-// var cmd = new Cmd;
-
-// cmd.copy('f:\\a', 'f:\\b', function(){
-// 	console.log(arguments)
-// })
-
+module.exports = cmd;
