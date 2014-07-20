@@ -70,7 +70,7 @@ lib.include({
 		var lib = this;
 		var result = {};
 		var files = result.files = [];
-		var folders = result.folders = [url];
+		var folders = result.folders = [];
 		var defaults = {
 			// 是否进行递归
 			deep 			: true,
