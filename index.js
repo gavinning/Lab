@@ -7,5 +7,7 @@
 
 
 module.exports = {
-	lib: require('./src/lib')
+	lib: require('./src/lib'),
+	server: require('./src/server'),
+	watch: require('./src/watch')
 }

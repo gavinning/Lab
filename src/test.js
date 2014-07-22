@@ -19,26 +19,6 @@
 // img('/Users/gavinning/Pictures/3.jpg', '/Users/gavinning/Pictures/out.jpg').width(750).run();
 
 
-var lib = require('./lib');
-
-var opt = {
-	source: '/Volumes/macdata/programtest/cate',
-	target: '/Volumes/macdata/programtest/target'
-}
-
-lib.copy(opt.source, opt.target, function(e, source, target){
-	// console.log(arguments)
-	console.log('done. ' + target)
-})
-
-
-
-
-
-
-
-
-
 
 
 

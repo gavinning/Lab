@@ -1,5 +1,4 @@
-#!/usr/bin/env node
-
+// by gavinning
 // test server
 
 var fs = require('fs');
@@ -7,9 +6,10 @@ var http = require('http');
 var path = require('path');
 var qs = require('querystring');
 var argv = process.argv.slice(2)[0] || process.cwd();
-var App, app;
+var App;
 
-function App(){
+function App(src){
+	console.log(src)
 	var app = function(req, res){
 		var arr = req.url.split('?');
 		var url = arr[0];
@@ -30,8 +30,8 @@ function App(){
 			app.hash[req.method + ':' + url](req, res);
 		}
 		// 检测静态资源
-		else if(path.join(argv, url)){
-			fs.readFile(path.join(argv, url), function(e, data){
+		else if(path.join(src, url)){
+			fs.readFile(path.join(src, url), function(e, data){
 				if(e){
 					console.log(e.message);
 					res.writeHead(404);
@@ -58,6 +58,7 @@ function App(){
 	// app选项
 	app.opt = {};
 
+
 	app.set = function(key, value){
 		if(!value) return;
 		this.opt[key] = value;
@@ -76,14 +77,37 @@ function App(){
 	return app;
 }
 
-app = new App();
+App.create = function(src, port){
+	var app = new App(src||__dirname);
 
-app.set('port', 5000);
+	app.set('port', port || 3000);
 
-// eg: 路由定义
-app.get('/', function(req, res){
-	res.end('hello world');
-})
+	// eg: 路由定义
+	app.get('/', function(req, res){
+		res.end('hello linco.server');
+	});
 
-http.createServer(app).listen(app.get('port'));
-console.log('listen '+ app.get('port') +', by ' + argv);
+	port = app.get('port');
+
+	http.createServer(app).listen(port);
+	console.log('listen '+ port +', by ' + src);
+
+	return app;
+}
+
+module.exports = App;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
