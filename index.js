@@ -1,5 +1,5 @@
 /*
- * linco.lib v0.0.1
+ * linco.lab v0.0.1
  * Base library for lib
  * Author, gavinning
  * HomePage, www.ilinco.com
@@ -8,5 +8,6 @@
 
 module.exports = {
 	lib: require('./src/lib'),
-	cmd: require('./src/cmd')
+	server: require('./src/server'),
+	watch: require('./src/watch')
 }
