@@ -167,11 +167,9 @@ var opt = {
 	// 文件夹级监听
 	isFolder: true,
 	// 过滤监听的文件
-	filter: [],
-	// 过滤监听的目录
-	filterFolder: [],
-	// 监听指定的文件
-	only: [],
+	// 使用linco.lab/lib.dir进行过滤
+	// 此处采用lib.dir过滤规则
+	filter: {},
 	// 回调
 	callback: function(){}
 }
