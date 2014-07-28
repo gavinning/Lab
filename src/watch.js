@@ -92,7 +92,7 @@ var live = {
 		if(lib.inArray(basename, live.opt.filterFolder) >= 0) return;
 
 		fs.watch(src, function(event, filename){
-			var stat;
+			var stat, isrepeat = false;
 
 			// 过滤不需要监听的文件
 			if(lib.inArray(filename, live.opt.filter) >= 0) return;
@@ -103,7 +103,12 @@ var live = {
 
 
 			try{
+				// 获取文件信息
 				stat = fs.statSync(path.join(src, filename));
+				// 检查重复事件
+				isrepeat = live.isRepeat(filename, stat);
+				if(isrepeat) return;
+				// 回调
 				callback(path.join(src, filename), stat);
 
 			// 忽略文件删除
@@ -127,6 +132,27 @@ var live = {
 
 	is: function(){
 
+	},
+
+	// 检查事件是否重复发射
+	isRepeat: function(filename, stat){
+		// 检查文件更改hash是否存在
+		if(!this.fileChangeHash){
+			this.fileChangeHash = {};
+			return false;
+		}
+		// 检查是否存在当前文件hash值
+		if(!this.fileChangeHash[filename]){
+			this.fileChangeHash[filename] = stat.mtime.getTime();
+			return false;
+		}
+		// 检查mtime值是否一致
+		if(this.fileChangeHash[filename] === stat.mtime.getTime()){
+			return true
+		}else{
+			this.fileChangeHash[filename] = stat.mtime.getTime();
+			return false;
+		}
 	}
 
 

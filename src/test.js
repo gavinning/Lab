@@ -19,7 +19,11 @@
 // img('/Users/gavinning/Pictures/3.jpg', '/Users/gavinning/Pictures/out.jpg').width(750).run();
 
 
+var watch = require('./watch');
 
+watch(['/Users/gavinning/Documents/work/Apps/info/DEMO'], function(filename, stat){
+	console.log(filename, stat.mtime.getTime())
+})
 
 
 
