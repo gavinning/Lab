@@ -1,5 +1,5 @@
 /*
- * linco.lab v0.0.1
+ * linco.lab
  * Base library for lib
  * Author, gavinning
  * HomePage, www.ilinco.com
