@@ -33,6 +33,10 @@ lib.include({
 		return this.isDir(src);
 	},
 
+	isAbsolute: function(src){
+		return /^\/|^\w:/.test(src)
+	},
+
 	mkdir: function(src, child){
 		var parent;
 
