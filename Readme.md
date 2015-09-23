@@ -24,24 +24,23 @@ var lab = require('linco.lab');
 
 // 直接调用实例化的lib
 var lib = lab.lib;
-
 ```
 
 ```
-
 // 调用Lib类
 var Lib = lab.Lib
+
 // 直接扩展Lib
 Lib.fn.extend({})
+
 // 创建实例
 var lib = new Lib;
+
 // 扩展实例
 lib.extend({})
-
 ```
 
 ```
-
 // 基于Lib创建子类
 var Util = Lib.create();
 
@@ -54,7 +53,6 @@ Util.fn.extend({
 var util = new Util;
 
 util.foo() // => bar
-
 ```
 
 
@@ -71,7 +69,6 @@ lib.each(arr, function(i, item){
 lib.each(obj, function(){
     // your code
 })
-
 ```
 
 ###### lib.type 类型检查，同jquery的$.type
@@ -186,7 +183,6 @@ var template = lib.toTemplate(htmlDom);
 基于gaze，更详细的文档请见：[gaze](https://www.npmjs.com/package/gaze)
 
 ```
-
 lab.watch('**/*.js', function(err, watcher) {
   // Files have all started watching
   // watcher === this
@@ -227,7 +223,6 @@ lib.watch(['stylesheets/*.css', 'images/**/*.png'], function() {
   // Add more patterns later to be watched
   this.add(['js/*.js']);
 });
-
 ```
 
 
@@ -258,10 +253,6 @@ app.get('/', function(req, res){
 app.post('/', function(req, res){
     res.end('Hello linco.server');
 })
-
-
-
-
 ```
 
 你还可以自启动server
@@ -287,6 +278,4 @@ app.post('/', function(req, res){
 
 http.createServer(app).listen(port);
 console.log('listen '+ port +', by ' + src);
-
-
 ```
