@@ -14,37 +14,49 @@ npm install linco.lab --save
 ## 开始
 
 ```
-var linco = require('linco.lab');
+var lab = require('linco.lab');
 ```
 
 
-### linco.lib模块
-
-linco工具库，封装了使用工具方法，基础方法来源jquery
+### lab.lib模块
 
 ```
-var lib = linco.lib;
+
+// 直接调用实例化的lib
+var lib = lab.lib;
+
 ```
 
-##### 基础方法
-来自jquery，如果有jquery基础，可以直接使用
-
-###### lib.extend 扩展，同jquery的$.extend
 ```
-// 扩展lib自身
-lib.extend({
-	foo: function(){}
+
+// 调用Lib类
+var Lib = lab.Lib
+// 直接扩展Lib
+Lib.fn.extend({})
+// 创建实例
+var lib = new Lib;
+// 扩展实例
+lib.extend({})
+
+```
+
+```
+
+// 基于Lib创建子类
+var Util = Lib.create();
+
+Util.fn.extend({
+    foo: function(){
+        console.log('bar')
+    }
 })
 
-// 扩展其他对象
-lib.extend(foo, {
-	bar: function(){}
-})
+var util = new Util;
 
-// 合并对象
-var obj = lib.extend({}, foo, bar);
+util.foo() // => bar
 
 ```
+
 
 ###### lib.each 遍历，同jquery的$.each
 ```
@@ -52,12 +64,12 @@ var obj = lib.extend({}, foo, bar);
 // 对于数组的遍历更推荐arr.forEach,原生支持的，很赞
 // arr.some, arr.every都是很棒的方法
 lib.each(arr, function(i, item){
-	// your code
+    // your code
 })
 
 // 遍历对象
 lib.each(obj, function(){
-	// your code
+    // your code
 })
 
 ```
@@ -132,13 +144,31 @@ lib.mkdir('/a/b/c/d')
 ```
 
 
-###### lib.copy 复制文件或文件夹
-```
-// 复制，MAC下数量过多会文件进程溢出
-// 可在启动进程时分配更多的内存以防止溢出
-lib.copy(source, target, callback)
+###### 文件、文件夹操作
 ```
 
+// 复制文件|文件夹
+lib.cp(source, target, callback)
+lib.copy(source, target, callback)
+
+// 删除文件|文件夹
+lib.rm(source, target, callback)
+lib.delete(source, target, callback)
+
+// 移动文件|文件夹
+lib.mv(source, target, callback)
+lib.move(source, target, callback)
+
+```
+
+```
+
+// 支持通配符操作
+lib.rm('./a/*.txt', fn)
+
+lib.rm('./a/**/*.txt', fn)
+
+```
 
 
 
@@ -152,41 +182,60 @@ var template = lib.toTemplate(htmlDom);
 
 
 
-### linco.watch模块
-用于监听的一个方法
-
-```
-var watch = linco.watch;
-
-var opt = {
-	// 相对根目录
-	// 如果传入的路径是相对路径则需要此参数
-	baseDir: null,
-	// 监听目录树
-	isTree: true,
-	// 文件夹级监听
-	isFolder: true,
-	// 过滤监听的文件
-	// 使用linco.lab/lib.dir进行过滤
-	// 此处采用lib.dir过滤规则
-	filter: {},
-	// 回调
-	callback: function(){}
-}
-
-// src可以是具体路径，也可以是路径的数组
-watch(src, opt, function(filename, stat){
-	// your code
-})
+### lab.watch模块
+基于gaze，更详细的文档请见：[gaze](https://www.npmjs.com/package/gaze)
 
 ```
 
+lab.watch('**/*.js', function(err, watcher) {
+  // Files have all started watching
+  // watcher === this
 
-### linco.server模块
-用于创建测试服务器的server模块，本地开发过程中经常需要用到测试服务器，安装一个iis，apache实在太大，如果你要求功能不多，如果你已经有了nodejs，直接安装linco.server一句话搞定；
+  // Get all watched files
+  this.watched(function(watched) {
+    console.log(watched);
+  });
+
+  // On file changed
+  this.on('changed', function(filepath) {
+    console.log(filepath + ' was changed');
+  });
+
+  // On file added
+  this.on('added', function(filepath) {
+    console.log(filepath + ' was added');
+  });
+
+  // On file deleted
+  this.on('deleted', function(filepath) {
+    console.log(filepath + ' was deleted');
+  });
+
+  // On changed/added/deleted
+  this.on('all', function(event, filepath) {
+    console.log(filepath + ' was ' + event);
+  });
+
+  // Get watched files with relative paths
+  this.relative(function(err, files) {
+    console.log(files);
+  });
+});
+
+// Also accepts an array of patterns
+lib.watch(['stylesheets/*.css', 'images/**/*.png'], function() {
+  // Add more patterns later to be watched
+  this.add(['js/*.js']);
+});
 
 ```
-var Server = linco.server;
+
+
+### lab.server模块
+用于创建测试服务器的server模块，本地开发过程中经常需要用到测试服务器，安装一个iis，apache实在太大，如果你要求功能不多，如果你已经有了nodejs，直接安装lab.server一句话搞定；
+
+```
+var Server = lab.server;
 
 // or
 
@@ -202,12 +251,12 @@ var app = Server.create(src [,port]);
 
 // get请求
 app.get('/', function(req, res){
-	res.end('Hello linco.server');
+    res.end('Hello linco.server');
 })
 
 // post请求
 app.post('/', function(req, res){
-	res.end('Hello linco.server');
+    res.end('Hello linco.server');
 })
 
 
@@ -227,12 +276,12 @@ app.set('port', port);
 
 // get请求
 app.get('/', function(req, res){
-	res.end('Hello linco.server');
+    res.end('Hello linco.server');
 })
 
 // post请求
 app.post('/', function(req, res){
-	res.end('Hello linco.server');
+    res.end('Hello linco.server');
 })
 
 

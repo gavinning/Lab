@@ -5,10 +5,8 @@
  * HomePage, www.ilinco.com
  */
 
-
-module.exports = {
-	lib: require('./src/lib'),
-	server: require('./src/server'),
-	watch: require('./src/watch'),
-	cmd: require('./src/cmd')
-}
+exports.Lib = require('./src/lib.js');
+exports.lib = new exports.Lib;
+exports.watch = require('gaze');
+exports.Class = require('aimee-class');
+exports.server = require('./src/server.js');
