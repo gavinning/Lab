@@ -137,13 +137,11 @@ lib.isFile('src')
 ```
 // 如果a路径不存在，则会自动创建a/b/c/d
 lib.mkdir('/a/b/c/d')
-
 ```
 
 
 ###### 文件、文件夹操作
 ```
-
 // 复制文件|文件夹
 lib.cp(source, target, callback)
 lib.copy(source, target, callback)
@@ -155,16 +153,13 @@ lib.delete(source, target, callback)
 // 移动文件|文件夹
 lib.mv(source, target, callback)
 lib.move(source, target, callback)
-
 ```
 
 ```
-
 // 支持通配符操作
 lib.rm('./a/*.txt', fn)
 
 lib.rm('./a/**/*.txt', fn)
-
 ```
 
 
