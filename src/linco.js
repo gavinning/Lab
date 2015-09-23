@@ -40,6 +40,8 @@ Linco = function(parent) {
 
 	// Define prototype parent
 	linco.fn.parent = linco;
+	linco.fn.class = linco;
+	linco.fn.Class = linco;
 	linco.fn.proxy = linco.proxy;
 	linco._super = linco.__proto__;
 	linco.extend = linco.fn.extend = Linco.extend;

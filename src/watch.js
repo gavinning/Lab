@@ -18,11 +18,9 @@ var live = {
 		// 文件夹级监听
 		isFolder: true,
 		// 过滤监听的文件
-		filter: [],
-		// 过滤监听的目录
-		filterFolder: [],
-		// 监听指定的文件
-		only: [],
+		// 使用linco.lab/lib.dir进行过滤
+		// 此处采用lib.dir过滤规则
+		filter: {},
 		// 回调
 		callback: function(){}
 	},
@@ -49,11 +47,14 @@ var live = {
 	array: function(arr){
 		var folder = [], _folder = [];
 		var _this = this;
+		var opt = this.opt;
 
 		arr.forEach(function(item){
+			// 检查路径是否为数组
 			if(lib.isDir(item))
 				return folder.push(item)
 
+			// 检查父级目录设置
 			if(_this.opt.baseDir && lib.isDir(path.join(_this.opt.baseDir, item)))
 				return folder.push(path.join(_this.opt.baseDir, item))
 
@@ -65,16 +66,16 @@ var live = {
 
 		// 合并需要建立监听的文件夹数组
 		this.opt.isTree ?
-		// 遍历子目录
-		folder.forEach(function(item){
-			_folder = _folder.concat(lib.dir(item).folder);
-		}):
-		// 只监听直属子目录
-		folder.forEach(function(item){
-			_folder = _folder.concat(_this.dir(item));
-		});
-
-		// console.log(_folder)
+			// 遍历监听目录
+			folder.forEach(function(item){
+				_folder = _folder.concat(lib.dir(item, opt.filter).folders);
+			}):
+			// 只监听直属子目录
+			folder.forEach(function(item){
+				// 不递归设置
+				opt.filter.deep = false;
+				_folder = _folder.concat(lib.dir(item, opt.filter).folders);
+			});
 
 		// 设置监听
 		_folder.forEach(function(item){
@@ -91,7 +92,7 @@ var live = {
 		if(lib.inArray(basename, live.opt.filterFolder) >= 0) return;
 
 		fs.watch(src, function(event, filename){
-			var stat;
+			var stat, isrepeat = false;
 
 			// 过滤不需要监听的文件
 			if(lib.inArray(filename, live.opt.filter) >= 0) return;
@@ -102,7 +103,12 @@ var live = {
 
 
 			try{
+				// 获取文件信息
 				stat = fs.statSync(path.join(src, filename));
+				// 检查重复事件
+				isrepeat = live.isRepeat(filename, stat);
+				if(isrepeat) return;
+				// 回调
 				callback(path.join(src, filename), stat);
 
 			// 忽略文件删除
@@ -126,6 +132,27 @@ var live = {
 
 	is: function(){
 
+	},
+
+	// 检查事件是否重复发射
+	isRepeat: function(filename, stat){
+		// 检查文件更改hash是否存在
+		if(!this.fileChangeHash){
+			this.fileChangeHash = {};
+			return false;
+		}
+		// 检查是否存在当前文件hash值
+		if(!this.fileChangeHash[filename]){
+			this.fileChangeHash[filename] = stat.mtime.getTime();
+			return false;
+		}
+		// 检查mtime值是否一致
+		if(this.fileChangeHash[filename] === stat.mtime.getTime()){
+			return true
+		}else{
+			this.fileChangeHash[filename] = stat.mtime.getTime();
+			return false;
+		}
 	}
 
 
