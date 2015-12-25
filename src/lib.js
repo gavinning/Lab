@@ -436,7 +436,7 @@ Lib.fn.extend({
     },
 
     cp: function(){
-        this.cp.apply(this, arguments);
+        this.copy.apply(this, arguments);
     },
 
     rm: function(){
