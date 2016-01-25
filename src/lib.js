@@ -417,7 +417,6 @@ Lib.fn.extend({
 
     // 删除文件|文件夹
     delete: function(source, callback){
-        console.log(arguments)
         require('rm-rf')(source, callback || FN);
     },
 
@@ -437,7 +436,7 @@ Lib.fn.extend({
     },
 
     cp: function(){
-        this.cp.apply(this, arguments);
+        this.copy.apply(this, arguments);
     },
 
     rm: function(){

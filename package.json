@@ -1,6 +1,6 @@
 {
   "name": "linco.lab",
-  "version": "0.0.14",
+  "version": "0.1.0",
   "description": "for nodejs, 底层工具方法",
   "main": "index.js",
   "scripts": {
@@ -17,8 +17,7 @@
   ],
   "dependencies": {
     "aimee-class": "^1.0.1",
-    "copy-dir": "0.0.7",
-    "gaze": "^0.5.1",
+    "copy-dir": "^0.0.8",
     "rm-rf": "^0.1.0"
   },
   "author": {
