@@ -7,6 +7,5 @@
 
 exports.Lib = require('./src/lib.js');
 exports.lib = new exports.Lib;
-exports.watch = require('gaze');
 exports.Class = require('aimee-class');
 exports.server = require('./src/server.js');

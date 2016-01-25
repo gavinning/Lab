@@ -174,51 +174,9 @@ var template = lib.toTemplate(htmlDom);
 
 
 
-### lab.watch模块
-基于gaze，更详细的文档请见：[gaze](https://www.npmjs.com/package/gaze)
+### lab.watch
+已废弃，请使用gaze，更详细的文档请见：[gaze](https://www.npmjs.com/package/gaze)
 
-```
-lab.watch('**/*.js', function(err, watcher) {
-  // Files have all started watching
-  // watcher === this
-
-  // Get all watched files
-  this.watched(function(watched) {
-    console.log(watched);
-  });
-
-  // On file changed
-  this.on('changed', function(filepath) {
-    console.log(filepath + ' was changed');
-  });
-
-  // On file added
-  this.on('added', function(filepath) {
-    console.log(filepath + ' was added');
-  });
-
-  // On file deleted
-  this.on('deleted', function(filepath) {
-    console.log(filepath + ' was deleted');
-  });
-
-  // On changed/added/deleted
-  this.on('all', function(event, filepath) {
-    console.log(filepath + ' was ' + event);
-  });
-
-  // Get watched files with relative paths
-  this.relative(function(err, files) {
-    console.log(files);
-  });
-});
-
-// Also accepts an array of patterns
-lib.watch(['stylesheets/*.css', 'images/**/*.png'], function() {
-  // Add more patterns later to be watched
-  this.add(['js/*.js']);
-});
-```
 
 
 ### lab.server模块
