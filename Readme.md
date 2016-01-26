@@ -56,7 +56,7 @@ util.foo() // => bar
 ```
 
 
-###### lib.each 遍历，同jquery的$.each
+#### lib.each 遍历，同jquery的$.each
 ```
 // 遍历数组
 // 对于数组的遍历更推荐arr.forEach,原生支持的，很赞
@@ -71,7 +71,7 @@ lib.each(obj, function(){
 })
 ```
 
-###### lib.type 类型检查，同jquery的$.type
+#### lib.type 类型检查，同jquery的$.type
 ```
 lib.type(obj)
 
@@ -91,31 +91,37 @@ lib.isPlainObject(obj);
 ##### 高级方法
 在基础方法之上进行扩展的适用nodejs开发的高级方法
 
-###### lib.dir 遍历目录下的所有文件及所有子文件夹，非常方便
-一个很强大的方法，opt参数详解请参考 [linco.dir](https://github.com/gavinning/dir), linco.dir是基于lib.dir 所以opt参数是一致的，内部使用同步读取fs.readdirSync
-
+#### lib.dir
+查找目录，返回数组，支持[glob](https://www.npmjs.com/package/glob)语法
 ```
-// opt参数为可选，不设置将执行默认规则，以下为默认规则
-var opt = {
-    deep: true,
-    filterFile      : ['^.*', '.svn-base', '_tmp', '副本', 'desktop.ini', '.DS_Store'],
-    filterFolder    : ['^.git$', '^.svn$'],
-    onlyFile        : [],
-    onlyFolder      : []
-}
+// 遍历当前目录
+var filepaths = lib.dir('*')
 
-// 遍历目录
-var obj = lib.dir('/User/username/Documents', opt);
+// 深度遍历当前目录及子目录
+var filepaths = lib.dir('**')
 
-// 存储目录下所有文件路径的数组
-obj.files
+// 查找目录下所有的js文件
+var filepaths = lib.dir('**/*.js')
 
-// 存储目录下所有子目录的数组
-obj.folders
+// 过滤app.js
+var filepaths = lib.dir('**/*.js', 'app.js')
 
+// 过滤app.js
+var filepaths = lib.dir('**/*.js', ['app.js'])
+
+// 过滤app.js
+var filepaths = lib.dir('**/*.js', {filter: ['app.js']})
+
+// 查找所有文件，过滤js文件和readme.md文件
+var filepaths = lib.dir('**', {filter: ['**/*.js', 'readme.md']})
+
+// 异步
+lib.dir('**', {filter: ['**/*.js', 'readme.md']}, function(err, filepaths){
+    console.log(filepaths)
+})
 ```
 
-###### lib.isDir 检测文件夹
+#### lib.isDir 检测文件夹
 ```
 // 检查不存在的路径不报错，而返回false
 // 实际开发中经常会检测不确定存在的路径，是否是文件夹或者文件
@@ -124,14 +130,14 @@ obj.folders
 lib.isDir('path')
 ```
 
-###### lib.isFile 检测文件
+#### lib.isFile 检测文件
 ```
 // 检查不存在的路径不报错，而返回false
 // 同上
 lib.isFile('src')
 ```
 
-###### lib.mkdir 可直接建立深层侧文件夹
+#### lib.mkdir 可直接建立深层侧文件夹
 *原生的文件夹建立api，如果父级路径不存在会报错，lib.mkdir可以自动创建不存在父级路径*
 
 ```
@@ -140,7 +146,7 @@ lib.mkdir('/a/b/c/d')
 ```
 
 
-###### 文件、文件夹操作
+#### 文件、文件夹操作
 ```
 // 复制文件|文件夹
 lib.cp(source, target, callback)
@@ -164,7 +170,7 @@ lib.rm('./a/**/*.txt', fn)
 
 
 
-###### lib.toTemplate 将HTML代码转换为js模板，就是用+连起来
+#### lib.toTemplate 将HTML代码转换为js模板，就是用+连起来
 个人有使用场景就封装了一个
 
 ```
