@@ -240,7 +240,6 @@ Lib.fn.extend({
     // 稳定版本
     dir: function(patterns, filter, fn){
         var options = {};
-        console.log(filter)
 
         if(lib.isPlainObject(filter)){
             options = filter;
