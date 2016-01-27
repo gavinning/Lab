@@ -1,6 +1,6 @@
 {
   "name": "linco.lab",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "for nodejs, 底层工具方法",
   "main": "index.js",
   "scripts": {
@@ -26,6 +26,7 @@
   "readmeFilename": "Readme.md",
   "dependencies": {
     "aimee-class": "^1.0.1",
+    "aimee-extend": "^1.0.0",
     "copy-dir": "^0.0.8",
     "glob": "^6.0.4",
     "rm-rf": "^0.1.0"

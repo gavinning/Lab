@@ -1,11 +1,12 @@
+var fs = require('fs');
+var path = require('path');
 var is = require('./is');
 var core = require('./core');
-var Class = require('aimee-class');
+var extend = require('aimee-extend');
 
 // 遍历文件夹
 // 稳定版本
 exports.dirAll = function(url, opt){
-    var lib = this;
     var result = {};
     var files = result.files = [];
     var folders = result.folders = [];
@@ -30,7 +31,7 @@ exports.dirAll = function(url, opt){
     if(!url || !is.isDir(url)) return result;
 
     // 合并参数
-    opt = Class.extend(defaults, opt);
+    opt = extend(defaults, opt);
 
     // 条件检查
     function verify(arr, obj){
@@ -75,7 +76,7 @@ exports.dirAll = function(url, opt){
             var isOnlyFolder;
 
             // 处理文件
-            if(lib.isFile(tmpSrc)){
+            if(is.isFile(tmpSrc)){
                 // 判断是否为应该过滤的文件
                 isFilterFile = verify(opt.filterFile, sub);
                 // 不被过滤的文件进行下一步处理
