@@ -1,6 +1,6 @@
 {
   "name": "linco.lab",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "for nodejs, 底层工具方法",
   "main": "index.js",
   "scripts": {

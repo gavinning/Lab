@@ -1,7 +1,6 @@
 var fs = require('fs');
 
 module.exports = {
-
     isFile: function(src){
         try{
             return fs.statSync(src).isFile();

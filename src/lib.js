@@ -5,9 +5,8 @@ var Class = require('aimee-class');
 var Lib = module.exports = Class.create();
 var lib = new Lib;
 
-Lib.include(require('./core'));
 Lib.include(require('./is'));
-Lib.include(require('./dir'));
+Lib.include(require('./core'));
 
 // For client
 Lib.include({
@@ -56,6 +55,7 @@ Lib.include({
             filter = null;
         }
 
+        options.dot = true;
         options.ignore = filter;
 
         return fn ?
