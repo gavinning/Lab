@@ -29,5 +29,26 @@ module.exports = {
 
     isAbsolute: function(src){
         return /^\/|^\w:/.test(src)
+    },
+
+    isSymboliclink: function(src){
+        try{
+            return fs.lstatSync(src.replace(/[\\\/]+$/, '')).isSymbolicLink()
+        }
+        catch(e){
+            return false
+        }
+    },
+
+    isSymbolicLink: function(src){
+        return this.isSymboliclink(src)
+    },
+
+    isSymlink: function(src){
+        return this.isSymboliclink(src)
+    },
+
+    isSymLink: function(src){
+        return this.isSymboliclink(src)
     }
 }

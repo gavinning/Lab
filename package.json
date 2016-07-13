@@ -1,7 +1,7 @@
 {
   "name": "linco.lab",
-  "version": "0.2.4",
-  "description": "for nodejs, 底层工具方法",
+  "version": "1.0.0",
+  "description": "常用方法",
   "main": "index.js",
   "scripts": {
     "test": "node ./test/core.js | tap-spec"
@@ -26,10 +26,7 @@
   "readmeFilename": "Readme.md",
   "dependencies": {
     "aimee-class": "^1.0.1",
-    "aimee-extend": "^1.0.0",
-    "copy-dir": "^0.0.8",
-    "glob": "^6.0.4",
-    "rm-rf": "^0.1.0"
+    "aimee-extend": "^1.0.0"
   },
   "devDependencies": {
     "tap-spec": "^4.1.1",

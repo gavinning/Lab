@@ -1,6 +1,5 @@
 var tape = require('tape');
-var Lib = require('../src/lib');
-var lib = new Lib;
+var lib = require('../')
 
 tape('test core', function (t) {
     t.equal(lib.type(1), 'number');
@@ -31,6 +30,7 @@ tape('test is', function (t) {
         lib.isAbsolute('/usr/local/bin'),
         lib.isAbsolute('c:\\'),
         !lib.isAbsolute('../')
+
     ].forEach(function(item){
         t.ok(item, 'should be ok');
     })
