@@ -24,26 +24,3 @@ lab.now()                   // => 2015-12-12 16:12:10
 
 lab.mkdir('/a/b/c/d')       // => /a/b/c/d
 ```
-
-```js
-lab.isNumber(1)             // => true
-
-lab.isArray([])             // => true
-
-lab.isPlainObject({})       // => true
-
-lab.isEmptyObject({})       // => true
-
-lab.isString('1')           // => true
-
-lab.type(1) === 'number'    // => true
-
-lab.type([]) === 'array'    // => true
-
-lab.type({}) === 'object'   // => true
-
-lab.type('1') === 'string'  // => true
-
-lab.type(lab.type) === 'function'   // => true
-
-```

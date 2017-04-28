@@ -1,8 +1,8 @@
 {
   "name": "linco.lab",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "常用方法",
-  "main": "index.js",
+  "main": "lib.js",
   "scripts": {
     "test": "node ./test/core.js | tap-spec"
   },
@@ -25,7 +25,6 @@
   "homepage": "https://github.com/gavinning/Lab",
   "readmeFilename": "Readme.md",
   "dependencies": {
-    "aimee-class": "^1.0.1",
     "aimee-extend": "^1.0.0"
   },
   "devDependencies": {
