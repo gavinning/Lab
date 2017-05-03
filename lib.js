@@ -73,6 +73,20 @@ class Lib {
         return this.isSymboliclink(src)
     }
 
+    random(Min, Max) {
+        let Range = Max - Min
+        let Rand = Math.random()
+        return(Min + Math.round(Rand * Range))
+    }
+
+    /**
+     * 概率计算
+     * @m 分子
+     * @d 分母
+     */
+    ratio(m, d) {
+        return this.random(1, d) <= m
+    }
 }
 
 let lib = new Lib
